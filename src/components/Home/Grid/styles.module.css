@@ -1,0 +1,5 @@
+@media (max-widtth: 1024px) {
+  .grid-cols {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

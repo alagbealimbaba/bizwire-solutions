@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+
+
+
+
+
+.breadcrumbs {
+  background-color: #000;
+  height: 560px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+}
+.breadcrumbs h1 {
+  font-size: 40px;
+  color: #a17635;
+  margin-bottom: 20px;
+  align-self: flex-start;
+  text-transform: uppercase;
+}
+.breadcrumbs .crumbs {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  color: #a17635;
+  font-weight: 500;
+  text-transform: uppercase;
+  margin: 0 5px;
+}
+
+.breadcrumbs > * {
+  display: inline-block;
+  margin-right: 10px;
+  color: #a17635;
+}
+.breadcrumbs .crumb:after {
+  content: ">";
+  margin-left: 10px;
+}
+.breadcrumbs .crumb:last-child:after {
+  display: none;
+}
+.breadcrumbs .crumb a {
+  color: #a17635;
+}
+/* Custom CSS */
+.phone-input-container {
+  border: 1px solid #e4ddf0;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+  height: 54px;
+  width: 216px;
+}
+
+.custom-phone-input {
+  width: 100%;
+  border: none;
+}
+
+.custom-phone-input input {
+  height: 40px;
+  font-size: 16px;
+  border-color: #e4ddf0;
+}
+
+
