@@ -1,12 +1,12 @@
-import { useState } from "react";
 import { Box, Grid, GridItem, Text } from "@chakra-ui/react";
+import { useHoverIndex } from "../../../hooks/useHoverIndex";
 
 const items = [
   {
     logoBackground: "url(./smartphone.png)",
     topic: "Clean Design",
     subtopic:
-      "Always keep in mind that user experience is about aligning businessgoals, user needs and brand communication. Clarity in design is a philosophy that emphasizes the visibility of an interface and the ease of use for its users. We strive to create an interface that is easy to use, while also providing flexibility and customization, focusing on the content, the key message, the most important action, and prioritizing function over beauty"
+      "Always keep in mind that user experience is about aligning businessgoals, user needs and brand communication. Clarity in design is a philosophy that emphasizes the visibility of an interface and the ease of use for its users. We strive to create an interface that is easy to use, while also providing flexibility and customization, focusing on the content, the key message, the most important action, and prioritizing function over beauty",
   },
   {
     logoBackground: "url(./analysis.png)",
@@ -24,24 +24,16 @@ const items = [
     logoBackground: "url(./coding.png)",
     topic: "Responsive Site",
     subtopic:
-    "Our designs automatically adjust for different-sized screens and viewports. Someone can browse our website from any device, and it will still look and function perfectly. Our web development design approach creates dynamic changes to the appearance of a website, depending on the screen size and orientation of the device being used to view it. One solution for the multitude of devices available to customers, ranging from tiny phones to huge desktop monitors."
-  }
+      "Our designs automatically adjust for different-sized screens and viewports. Someone can browse our website from any device, and it will still look and function perfectly. Our web development design approach creates dynamic changes to the appearance of a website, depending on the screen size and orientation of the device being used to view it. One solution for the multitude of devices available to customers, ranging from tiny phones to huge desktop monitors.",
+  },
 ];
 
 const GridComponent = () => {
-  const [hoveredIndex, setHoveredIndex] = useState(null);
-
-  const handleMouseEnter = (index) => {
-    setHoveredIndex(index);
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredIndex(null);
-  };
+  const { hoveredIndex, handleMouseEnter, handleMouseLeave } = useHoverIndex();
 
   return (
     <Box
-    w={"100%"}
+      w={"100%"}
       padding={{ lg: "20px", sm: "none" }}
       display={"flex"}
       flexDir={"column"}
@@ -83,9 +75,7 @@ const GridComponent = () => {
               justifyContent="center"
               alignItems="center"
               style={{
-                transform: `rotateY(${
-                  hoveredIndex === index ? "180" : "0"
-                }deg)`,
+                transform: `rotateY(${hoveredIndex === index ? "180" : "0"}deg)`,
                 transition: "transform 1s",
               }}
             ></Box>

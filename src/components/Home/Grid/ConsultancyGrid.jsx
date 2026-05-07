@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { Box, Grid, GridItem, Text } from "@chakra-ui/react";
-import styles from "./styles.module.css";
+import { useHoverIndex } from "../../../hooks/useHoverIndex";
+
 const items = [
   {
     logoBackground: "url(./FATM.jpeg)",
@@ -31,7 +31,6 @@ const items = [
     topic: "Property Development to Ownership",
     subtopic:
       "We help individuals and corporate organizations to purchase a tract of land,  develop the building program and design, obtain the necessary public approval, build the structures, manage, and ultimately sell it. Home renovation and repairs to attract better values is one of our best ideas. We are a trusted provider to help you become a successful homeowner..",
-      
   },
   {
     logoBackground: "url(./IDM.jpeg)",
@@ -42,15 +41,7 @@ const items = [
 ];
 
 const GridComponent = () => {
-  const [hoveredIndex, setHoveredIndex] = useState(null);
-
-  const handleMouseEnter = (index) => {
-    setHoveredIndex(index);
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredIndex(null);
-  };
+  const { hoveredIndex, handleMouseEnter, handleMouseLeave } = useHoverIndex();
 
   return (
     <Box
@@ -62,7 +53,6 @@ const GridComponent = () => {
       justifyContent={"center"}
     >
       <Grid
-        className="styles.grid-cols"
         templateColumns={{
           md: "repeat(2, 1fr)",
           base: "repeat(1, 1fr)",
@@ -97,9 +87,7 @@ const GridComponent = () => {
               justifyContent="center"
               alignItems="center"
               style={{
-                transform: `rotateY(${
-                  hoveredIndex === index ? "180" : "0"
-                }deg)`,
+                transform: `rotateY(${hoveredIndex === index ? "180" : "0"}deg)`,
                 transition: "transform 1s",
               }}
             ></Box>

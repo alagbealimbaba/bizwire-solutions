@@ -1,20 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { Box, Flex, Text,
-  Image
- } from "@chakra-ui/react";
+import { Box, Flex, Text, Image } from "@chakra-ui/react";
 import InformationTechnology from "./InformationTechnologyGrid";
 import { Navbar } from "../Navbar/Navbar";
 import Loading from "../../loading";
 import Footer from "../Footer";
+import { usePageLoader } from "../../../hooks/usePageLoader";
 
 const Services = () => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-  }, []);
+  const isLoading = usePageLoader();
 
   return (
     <Box>
@@ -23,17 +15,13 @@ const Services = () => {
       ) : (
         <>
           <Navbar />
-          <Box
-            width={"100%"}
-            bg={"gray.100"}
-          >
+          <Box width={"100%"} bg={"gray.100"}>
             <Image
               src="./tech services2.jpg"
               alt="thumbnail services"
               h={"580px"}
               w={{ lg: "100%", base: "100%" }}
             />
-
             <Flex
               direction={"column"}
               alignItems={"center"}

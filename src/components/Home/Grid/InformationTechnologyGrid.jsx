@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { Box, Grid, GridItem, Text } from "@chakra-ui/react";
+import { useHoverIndex } from "../../../hooks/useHoverIndex";
 
 const items = [
   {
@@ -18,7 +18,7 @@ const items = [
     logoBackground: "url(./DMS.jpg)",
     topic: "Technical Digital Marketing Services                  ",
     subtopic:
-      "We believe in tailored digital marketing solutions that propel your business to new heights. Join a partnership that understands your brand, your goals, and your unique market. We’re not just an agency – we’re your digital marketing allies, committed to driving success day after day.",
+      "We believe in tailored digital marketing solutions that propel your business to new heights. Join a partnership that understands your brand, your goals, and your unique market. We're not just an agency – we're your digital marketing allies, committed to driving success day after day.",
   },
   {
     logoBackground: "url(./DEA.jpg)",
@@ -41,15 +41,7 @@ const items = [
 ];
 
 const GridComponent = () => {
-  const [hoveredIndex, setHoveredIndex] = useState(null);
-
-  const handleMouseEnter = (index) => {
-    setHoveredIndex(index);
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredIndex(null);
-  };
+  const { hoveredIndex, handleMouseEnter, handleMouseLeave } = useHoverIndex();
 
   return (
     <Box
@@ -96,9 +88,7 @@ const GridComponent = () => {
               justifyContent="center"
               alignItems="center"
               style={{
-                transform: `rotateY(${
-                  hoveredIndex === index ? "180" : "0"
-                }deg)`,
+                transform: `rotateY(${hoveredIndex === index ? "180" : "0"}deg)`,
                 transition: "transform 1s",
               }}
             ></Box>

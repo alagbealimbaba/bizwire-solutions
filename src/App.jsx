@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@chakra-ui/react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Loading from "./components/loading";
 import Homepage from "./components/Home/Home";
 import AboutUs from "./components/About Us/AboutUs";
 import InformationServices from "./components/Home/Grid/InformationServices";
 import Services from "./components/Home/Grid/Services";
 import PageNotAvailable from "./components/portfolio/PageNotAvailable";
-import Blog from "./components/Home/Blog/Blog";
 import AllBlogs from "./components/admin/AllBlogs/AllBlogs";
 import BlogInfo from "./components/admin/BlogInfo/BlogInfo";
 import AdminLogin from "./components/admin/AdminLogin/AdminLogin";
 import Dashboard from "./components/admin/Dashboard/Dashboard";
-import ProtectedRoute from "./components/ProtectedRoutes";
 import Login from "./components/Login";
 import BlogNotAvailable from "./components/portfolio/BlogNotAvailable";
 
@@ -20,11 +18,7 @@ const App = () => {
   const [showLoading, setShowLoading] = useState(true);
 
   useEffect(() => {
-    const delay = setTimeout(() => {
-      setShowLoading(false);
-    }, 3000);
-
-    // Clean up the timer when the component unmounts
+    const delay = setTimeout(() => setShowLoading(false), 3000);
     return () => clearTimeout(delay);
   }, []);
 
@@ -34,12 +28,6 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route
           path="/blog"
-          // element={
-          //   <ProtectedRoute>
-          //                <React.Suspense fallback={showLoading ? <Loading /> : null}></React.Suspense>
-
-          //   </ProtectedRoute>
-          // }
           element={
             <React.Suspense fallback={showLoading ? <Loading /> : null}>
               <BlogNotAvailable />
@@ -73,7 +61,7 @@ const App = () => {
               <AboutUs />
             </React.Suspense>
           }
-        />{" "}
+        />
         <Route
           path="/information-services"
           element={

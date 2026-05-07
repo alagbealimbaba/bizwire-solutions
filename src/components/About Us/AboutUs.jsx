@@ -1,22 +1,16 @@
 import { Box } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 import Loading from "../loading";
 import { Navbar } from "../Home/Navbar/Navbar";
-import { BreadCrumbs } from "../breadCrumbs";
 import Footer from "../Home/Footer";
 import Hero from "./Sections/Hero";
 import Vision from "./Sections/MissionVision";
 import Team from "./Sections/Team";
 import Corevalues from "./Sections/Corevalues";
+import { usePageLoader } from "../../hooks/usePageLoader";
 
 const AboutUs = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const isLoading = usePageLoader();
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-  }, []);
   return (
     <Box>
       {isLoading ? (
@@ -24,7 +18,6 @@ const AboutUs = () => {
       ) : (
         <>
           <Navbar />
-          {/* <BreadCrumbs /> */}
           <Hero />
           <Vision />
           <Team />

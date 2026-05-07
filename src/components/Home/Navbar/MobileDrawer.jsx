@@ -12,37 +12,10 @@ import DocumentCollapse from "./DocumentCollapse";
 import { ToggleButton } from "./ToggleButton";
 import { MdClose } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { menuLinks } from "../../../constants/navigationMenu";
 
 export const MobileDrawer = () => {
   const { isOpen, onToggle, onClose } = useDisclosure();
-
-  // Create a similar menu structure as the desktop navbar
-  const mobileMenuLinks = {
-    Home: { link: "/home" },
-    Company: {
-      link: "/about",
-    },
-    "Tech Services": {
-      link: "/information-services",
-    },
-    Consulting: {
-      link: "/services",
-    },
-    Portfolio: {
-      link: "/home",
-      items: [
-        "Cooperative Management",
-        "Pension & Gratuity Management",
-        "Business Impact Analysis",
-        "Risk Management",
-        "Portfolio Management",
-        "Human Resources/Payroll",
-        "Association Membership Management",
-        "Product Distribution Visibility",
-      ],
-    },
-    Blog: { link: "/blog" },
-  };
 
   return (
     <>
@@ -73,19 +46,19 @@ export const MobileDrawer = () => {
               onClick={onClose}
             />
             <Stack color={"black"} spacing="1">
-              {Object.keys(mobileMenuLinks).map((headerText, index) => (
+              {Object.keys(menuLinks).map((headerText, index) => (
                 <div key={headerText}>
                   {index > 0 && <hr style={{ border: "1px solid #000" }} />}
 
-                  {mobileMenuLinks[headerText].items ? (
+                  {menuLinks[headerText].items ? (
                     <DocumentCollapse
                       key={headerText}
                       headerText={headerText}
-                      documentItems={mobileMenuLinks[headerText].items}
-                      link={mobileMenuLinks[headerText].link}
+                      documentItems={menuLinks[headerText].items}
+                      link={menuLinks[headerText].link}
                     />
                   ) : (
-                    <Link to={mobileMenuLinks[headerText].link}>
+                    <Link to={menuLinks[headerText].link}>
                       <Button
                         size={"lg"}
                         color={"black"}

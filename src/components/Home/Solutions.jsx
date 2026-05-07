@@ -1,25 +1,10 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
-import { useEffect, useRef } from "react";
 import { FaCircle } from "react-icons/fa";
-import gsap from "gsap";
+import { useFloatingAnimation } from "../../hooks/useFloatingAnimation";
 
 const Solutions = () => {
-   const imageRef = useRef(null);
-  
-    useEffect(() => {
-      const tl = gsap.timeline();
-  
-      tl.to(imageRef.current, {
-        y: 40,
-        duration: 1,
-        opacity: 1,
-        yoyo: true,
-        repeat: -1,
-      });
-  
-      tl.play();
-    }, []);
-  
+  const imageRef = useFloatingAnimation();
+
   return (
     <>
       <Box
@@ -28,7 +13,6 @@ const Solutions = () => {
         w={"100%"}
         justifyContent={{ sm: "center", md: "center", lg: "space-between" }}
         alignItems={"center"}
-
         bgImage={"bg-image.png"}
         bgSize={"cover"}
         bgPos={"center"}
@@ -73,14 +57,16 @@ const Solutions = () => {
           base: "column-reverse",
         }}
       >
-        <Box w={{ lg: "30%", md: "100%", base: "100%" }}
+        <Box
+          w={{ lg: "30%", md: "100%", base: "100%" }}
           p={{ lg: 3, md: 3, base: 0 }}
           display={'grid'}
-          placeItems={'center'}>
+          placeItems={'center'}
+        >
           <Image
             src="./hero.png"
             alt="thumbnail services"
-          ref={imageRef}
+            ref={imageRef}
           />
         </Box>
         <Flex
@@ -89,8 +75,7 @@ const Solutions = () => {
           justifyContent={"center"}
           alignItems={"flex-start"}
           flexDirection={"column"}
-            p={{ lg: 4, md: 4, base: 0 }}
-          // border={"1px solid black"}
+          p={{ lg: 4, md: 4, base: 0 }}
         >
           <Box textAlign={"left"}>
             <Text
@@ -99,16 +84,16 @@ const Solutions = () => {
               color={"#000"}
               margin={"0 0 10px"}
               fontSize={"32px"}
-              width={{  md: "100%", base: "100%" }}
+              width={{ md: "100%", base: "100%" }}
             >
               Exclusive Agency For Critical and Value-Adding Solutions
             </Text>
           </Box>
-          <Text textAlign={"left"}  color={"#000"}  fontWeight={"400"}>
+          <Text textAlign={"left"} color={"#000"} fontWeight={"400"}>
             Bizwire is the partner of choice for many of the leading businesses
             and problem-solving enterprises, SMEs and technology challengers. We
             help businesses elevate their worth through custom services that
-            bring out values from investments. 
+            bring out values from investments.
           </Text>
           <Box
             display={"flex"}
@@ -119,112 +104,32 @@ const Solutions = () => {
             w={"100%"}
             mt={4}
           >
-            <Box
-              display={"flex"}
-              justifyContent={"space-between"}
-              alignItems={"center"}
-              gap={3}
-            >
-              <FaCircle size={"10px"} color="black" />
-              <Text
-                fontSize={{ lg: "18px", md: "14px", base: "14px" }}
-                color={"gray.600"}
-                letterSpacing={"-0.5px"}
+            {[
+              "Information Technology and Communication Services",
+              "Business Continuity Management",
+              "General Process Improvement",
+              "Financial Advisory and Tax Management",
+              "Property Development",
+              "Infrastructure Development",
+              "Human Capital Development",
+            ].map((item) => (
+              <Box
+                key={item}
+                display={"flex"}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+                gap={3}
               >
-                Information Technology and Communication Services{" "}
-              </Text>
-            </Box>
-            <Box
-              display={"flex"}
-              justifyContent={"space-between"}
-              alignItems={"center"}
-              gap={3}
-            >
-              <FaCircle size={"10px"} color="black" />
-              <Text
-                fontSize={{ lg: "18px", md: "14px", base: "14px" }}
-                color={"gray.600"}
-                letterSpacing={"-0.5px"}
-              >
-                Business Continuity Management
-              </Text>
-            </Box>
-
-            <Box
-              display={"flex"}
-              justifyContent={"space-between"}
-              alignItems={"center"}
-              gap={3}
-            >
-              <FaCircle size={"10px"} color="black" />
-              <Text
-                fontSize={{ lg: "18px", md: "14px", base: "14px" }}
-                color={"gray.600"}
-                letterSpacing={"-0.5px"}
-              >
-                General Process Improvement
-              </Text>
-            </Box>
-            <Box
-              display={"flex"}
-              justifyContent={"space-between"}
-              alignItems={"center"}
-              gap={3}
-            >
-              <FaCircle size={"10px"} color="black" />
-              <Text
-                fontSize={{ lg: "18px", md: "14px", base: "14px" }}
-                color={"gray.600"}
-                letterSpacing={"-0.5px"}
-              >
-                Financial Advisory and Tax Management
-              </Text>
-            </Box>
-            <Box
-              display={"flex"}
-              justifyContent={"space-between"}
-              alignItems={"center"}
-              gap={3}
-            >
-              <FaCircle size={"10px"} color="black" />
-              <Text
-                fontSize={{ lg: "18px", md: "14px", base: "14px" }}
-                color={"gray.600"}
-                letterSpacing={"-0.5px"}
-              >
-                Property Development
-              </Text>
-            </Box>
-            <Box
-              display={"flex"}
-              justifyContent={"space-between"}
-              alignItems={"center"}
-              gap={3}
-            >
-              <FaCircle size={"10px"} color="black" />
-              <Text
-                fontSize={{ lg: "18px", md: "14px", base: "14px" }}
-                color={"gray.600"}
-                letterSpacing={"-0.5px"}
-              >
-                Infrastructure Development
-              </Text>
-            </Box>
-            <Box
-              display={"flex"}
-              justifyContent={"space-between"}
-              alignItems={"center"}
-              gap={3}
-            >
-              <FaCircle size={"10px"} color="black" />
-              <Text
-                fontSize={{ lg: "18px", md: "14px", base: "14px" }}
-                color={"gray.600"}
-                letterSpacing={"-0.5px"}
-              >
-                Human Capital Development
-              </Text>
-            </Box>
+                <FaCircle size={"10px"} color="black" />
+                <Text
+                  fontSize={{ lg: "18px", md: "14px", base: "14px" }}
+                  color={"gray.600"}
+                  letterSpacing={"-0.5px"}
+                >
+                  {item}
+                </Text>
+              </Box>
+            ))}
           </Box>
         </Flex>
       </Flex>

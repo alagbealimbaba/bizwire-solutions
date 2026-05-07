@@ -7,12 +7,17 @@ import { FaInstagram } from "react-icons/fa";
 import { HiOutlineGlobeAlt } from "react-icons/hi";
 import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
+import { CONTACT } from "../../constants/contact";
+
+const SOCIAL_ICONS = [
+  { id: "facebook", Icon: FaFacebookF },
+  { id: "twitter", Icon: FaXTwitter },
+  { id: "instagram", Icon: FaInstagram },
+  { id: "globe", Icon: HiOutlineGlobeAlt },
+];
 
 const Footer = () => {
-  const [isFacebookHovered, setIsFacebookHovered] = useState(false);
-  const [isTwitterHovered, setIsTwitterHovered] = useState(false);
-  const [isInstagramHovered, setIsInstagramHovered] = useState(false);
-  const [isGlobeHovered, setIsGlobeHovered] = useState(false);
+  const [hoveredIcon, setHoveredIcon] = useState(null);
 
   const customIcon = {
     color: "#c9923e",
@@ -40,10 +45,6 @@ const Footer = () => {
     lineHeight: "45px",
     textAlign: "center",
     borderRadius: "50%",
-  };
-  const scrollToContactUs = () => {
-    const contactSection = document.getElementById("contact-us-section");
-    contactSection.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -100,7 +101,7 @@ const Footer = () => {
             textAlign={"center"}
             fontSize={{ lg: "18px", base: "16px" }}
           >
-            consult@bizwiredynamics.com
+            {CONTACT.email}
           </Text>
         </Box>
         <Box
@@ -121,7 +122,7 @@ const Footer = () => {
             textAlign={"center"}
             fontSize={{ lg: "18px", base: "16px" }}
           >
-            +234 8039601150
+            {CONTACT.phone}
           </Text>
         </Box>
       </Box>
@@ -150,50 +151,20 @@ const Footer = () => {
           </Text>
         </Box>
         <Box display="flex" gap={6} justifyContent="center" alignItems="center">
-          <Link
-            style={{
-              ...socialIconStyle,
-              color: isFacebookHovered ? "#000" : "#a17635",
-              background: isFacebookHovered ? "#a17635" : "#000",
-            }}
-            onMouseEnter={() => setIsFacebookHovered(true)}
-            onMouseLeave={() => setIsFacebookHovered(false)}
-          >
-            <FaFacebookF />
-          </Link>
-          <Link
-            style={{
-              ...socialIconStyle,
-              color: isTwitterHovered ? "#000" : "#a17635",
-              background: isTwitterHovered ? "#a17635" : "#000",
-            }}
-            onMouseEnter={() => setIsTwitterHovered(true)}
-            onMouseLeave={() => setIsTwitterHovered(false)}
-          >
-            <FaXTwitter />
-          </Link>
-          <Link
-            style={{
-              ...socialIconStyle,
-              color: isInstagramHovered ? "#000" : "#a17635",
-              background: isInstagramHovered ? "#a17635" : "#000",
-            }}
-            onMouseEnter={() => setIsInstagramHovered(true)}
-            onMouseLeave={() => setIsInstagramHovered(false)}
-          >
-            <FaInstagram />
-          </Link>
-          <Link
-            style={{
-              ...socialIconStyle,
-              color: isGlobeHovered ? "#000" : "#a17635",
-              background: isGlobeHovered ? "#a17635" : "#000",
-            }}
-            onMouseEnter={() => setIsGlobeHovered(true)}
-            onMouseLeave={() => setIsGlobeHovered(false)}
-          >
-            <HiOutlineGlobeAlt />
-          </Link>
+          {SOCIAL_ICONS.map(({ id, Icon }) => (
+            <Link
+              key={id}
+              style={{
+                ...socialIconStyle,
+                color: hoveredIcon === id ? "#000" : "#a17635",
+                background: hoveredIcon === id ? "#a17635" : "#000",
+              }}
+              onMouseEnter={() => setHoveredIcon(id)}
+              onMouseLeave={() => setHoveredIcon(null)}
+            >
+              <Icon />
+            </Link>
+          ))}
         </Box>
       </Box>
     </Box>

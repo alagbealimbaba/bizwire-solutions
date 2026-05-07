@@ -1,17 +1,12 @@
-import { Box, Flex, Text,Image } from "@chakra-ui/react";
+import { Box, Flex, Text, Image } from "@chakra-ui/react";
 import ConsultancyGrid from "./ConsultancyGrid";
 import { Navbar } from "../Navbar/Navbar";
-import React, { useState, useEffect } from "react";
 import Loading from "../../loading";
 import Footer from "../Footer";
-const Services = () => {
-  const [isLoading, setIsLoading] = useState(true);
+import { usePageLoader } from "../../../hooks/usePageLoader";
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-  }, []);
+const Services = () => {
+  const isLoading = usePageLoader();
 
   return (
     <Box>
@@ -20,14 +15,13 @@ const Services = () => {
       ) : (
         <>
           <Navbar />
-          <Box width={"100%"} bg={"gray.100"} >
+          <Box width={"100%"} bg={"gray.100"}>
             <Image
               src="./Consult.jpg"
               alt="thumbnail services"
               h={"580px"}
               w={{ lg: "100%", base: "100%" }}
             />
-
             <Flex
               direction={"column"}
               alignItems={"center"}
@@ -35,11 +29,9 @@ const Services = () => {
               textAlign={"left"}
               margin={'2px 0 25px 0'}
             >
-    
-
               <Text
                 color={"#000"}
-                width={"100%" }
+                width={"100%"}
                 letterSpacing={"-0.2px"}
                 lineHeight={"-1px"}
                 marginBottom={{ lg: "0px", md: "15px", base: "15px" }}

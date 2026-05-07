@@ -15,6 +15,8 @@ import {
 import { useToast } from "@chakra-ui/react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import { CONTACT } from "../../constants/contact";
+import { createToastHelpers } from "../../utils/toastUtils";
 
 const inputStyles = {
   height: "54px",
@@ -35,28 +37,18 @@ const initialFormData = {
 
 const FormPage = () => {
   const [formData, setFormData] = React.useState(initialFormData);
-  const [isSubmitted, setIsSubmitted] = React.useState(false);
   const toast = useToast();
+  const { success, error } = createToastHelpers(toast);
 
-  // Define your Formspree form endpoint URL
-  const formEndpoint = "mrbgzlnk"; // Replace with your actual Formspree endpoint
-
-  // Use useForm with the Formspree endpoint
-  const [state, handleSubmit] = useForm(formEndpoint);
+  const [state, handleSubmit] = useForm(CONTACT.formspreeEndpoint);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
   const handlePhoneChange = (value) => {
-    setFormData({
-      ...formData,
-      phone: value || "",
-    });
+    setFormData({ ...formData, phone: value || "" });
   };
 
   const isValidEmail = (email) => {
@@ -68,66 +60,27 @@ const FormPage = () => {
     e.preventDefault();
 
     if (!formData.name || !formData.email || !formData.message) {
-      toast({
-        position: "bottom-right",
-
-        title: "Error",
-        description: "Please fill in all required fields.",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
+      error("Error", "Please fill in all required fields.", { position: "bottom-right" });
       return;
     }
 
     if (!isValidEmail(formData.email)) {
-      toast({
-        title: "Error",
-        description: "Please enter a valid email address.",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
+      error("Error", "Please enter a valid email address.");
       return;
     }
 
     if (!formData.phone) {
-      toast({
-        title: "Error",
-        description: "Please enter a valid phone number.",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
+      error("Error", "Please enter a valid phone number.");
       return;
     }
 
-    // Submit the form using Formspree
     await handleSubmit(e);
 
     if (state.succeeded) {
-      toast({
-        title: "Success",
-        description: "Your message has been sent!",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-
-      // Reset the form and mark it as submitted
+      success("Success", "Your message has been sent!");
       setFormData(initialFormData);
-      setIsSubmitted(true);
-    }
-    if (state.errors) {
-      toast({
-        title: "Error",
-        description: "Your message was not sent successfully!",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-    } else {
-      return;
+    } else if (state.errors) {
+      error("Error", "Your message was not sent successfully!");
     }
   };
 
@@ -169,7 +122,6 @@ const FormPage = () => {
             >
               Get in touch with us{" "}
             </Text>
-
             <Text
               color={"#6a7c92"}
               textAlign={"left"}
@@ -183,11 +135,7 @@ const FormPage = () => {
             <form method="POST" onSubmit={handleFormSubmit}>
               <FormControl>
                 <Grid
-                  templateColumns={{
-                    base: "1fr",
-                    md: "1fr 1fr",
-                    lg: "1fr 2fr",
-                  }}
+                  templateColumns={{ base: "1fr", md: "1fr 1fr", lg: "1fr 2fr" }}
                   gap={4}
                   p={2}
                 >
@@ -211,13 +159,8 @@ const FormPage = () => {
                     />
                   </GridItem>
                 </Grid>
-
                 <Grid
-                  templateColumns={{
-                    base: "1fr",
-                    md: "1fr 1fr",
-                    lg: "1fr 2fr",
-                  }}
+                  templateColumns={{ base: "1fr", md: "1fr 1fr", lg: "1fr 2fr" }}
                   gap={4}
                   p={2}
                 >
@@ -271,7 +214,7 @@ const FormPage = () => {
                     borderColor: "#a17635",
                   }}
                 >
-                  {isSubmitted ? "Send Message" : "Send Message"}
+                  Send Message
                 </Button>
               </Flex>
             </form>

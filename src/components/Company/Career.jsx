@@ -1,18 +1,13 @@
 import { Box } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 import Loading from "../loading";
 import { Navbar } from "../Home/Navbar/Navbar";
 import { BreadCrumbs } from "../breadCrumbs";
 import Footer from "../Home/Footer";
+import { usePageLoader } from "../../hooks/usePageLoader";
 
 const Mission = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const isLoading = usePageLoader();
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-  }, []);
   return (
     <Box>
       {isLoading ? (
@@ -21,7 +16,6 @@ const Mission = () => {
         <>
           <Navbar />
           <BreadCrumbs />
-
           <Footer />
         </>
       )}

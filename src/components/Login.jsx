@@ -1,101 +1,64 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth, db } from '../../firebaseConfig'; // Ensure you have your Firestore config
-import { collection, doc, getDoc, setDoc } from 'firebase/firestore'; // Firestore methods
+import { auth, db } from '../../firebaseConfig';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { Box, Input, Button, Text, Heading, VStack, Link, useToast } from '@chakra-ui/react';
 import { Navbar } from './Home/Navbar/Navbar';
 import Footer from './Home/Footer';
+import { createToastHelpers } from '../utils/toastUtils';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
-  const toast = useToast(); // Initialize toast
+  const toast = useToast();
+  const { success, error } = createToastHelpers(toast);
 
-  // Function to check role in Firestore after login
   const checkUserRole = async (uid) => {
     const userDocRef = doc(db, 'users', uid);
     const userDoc = await getDoc(userDocRef);
 
     if (userDoc.exists()) {
       const role = userDoc.data().role;
-      if (role === 'admin') {
-        navigate('/admin-dashboard'); // Redirect to admin page if admin
-      } else {
-        navigate('/blog'); // Redirect to regular blog page if user
-      }
+      navigate(role === 'admin' ? '/admin-dashboard' : '/blog');
     } else {
       throw new Error('User data not found.');
     }
   };
 
-  // Handle login logic
   const handleLogin = async () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      // Check user role after login
-      await checkUserRole(user.uid);
-
-      toast({
-        title: 'Logged in successfully!',
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      });
-    } catch (error) {
-      toast({
-        title: 'Login failed.',
-        description: error.message,
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+      await checkUserRole(userCredential.user.uid);
+      success('Logged in successfully!');
+    } catch (err) {
+      error('Login failed.', err.message);
     }
   };
 
-  // Handle sign up logic
   const handleSignUp = async () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // By default, set the role of the new user as 'user' in Firestore
       await setDoc(doc(db, 'users', user.uid), {
         email: user.email,
-        role: 'user', // Default role for new users
+        role: 'user',
       });
 
-      toast({
-        title: 'User signed up successfully!',
-        status: 'success',
-        position: 'top',
-        duration: 5000,
-        isClosable: true,
-      });
-
-      navigate('/blog'); // Redirect to blog after sign up
-    } catch (error) {
-      toast({
-        title: 'Sign up failed.',
-        description: error.message,
-        status: 'error',
-        position: 'top',
-        duration: 5000,
-        isClosable: true,
-      });
+      success('User signed up successfully!', undefined, { position: 'top' });
+      navigate('/blog');
+    } catch (err) {
+      error('Sign up failed.', err.message, { position: 'top' });
     }
   };
 
   return (
     <Box minHeight="100vh" display="flex" flexDirection="column">
-      {/* Navbar at the top */}
       <Navbar />
 
-      {/* Main login box */}
       <Box padding={20} flex="1" display="flex" alignItems="center" justifyContent="center" mt={30} mb={30}>
         <Box
           width={{ base: '90%', md: '400px' }}
@@ -131,37 +94,17 @@ function Login() {
               isRequired
             />
 
-            {isSignUp ? (
-              <Button
-                width="100%"
-                sx={{
-                  background: "#000", // Initial background color (black)
-                  color: "#a17635", // Initial text color (gold)
-                  _hover: {
-                    background: "#a17635", // Hover background color (gold)
-                    color: "#000", // Hover text color (black)
-                  },
-                }}
-                onClick={handleSignUp}
-              >
-                Sign Up
-              </Button>
-            ) : (
-              <Button
-                width="100%"
-                sx={{
-                  background: "#000", // Initial background color (black)
-                  color: "#a17635", // Initial text color (gold)
-                  _hover: {
-                    background: "#a17635", // Hover background color (gold)
-                    color: "#000", // Hover text color (black)
-                  },
-                }}
-                onClick={handleLogin}
-              >
-                Login
-              </Button>
-            )}
+            <Button
+              width="100%"
+              sx={{
+                background: "#000",
+                color: "#a17635",
+                _hover: { background: "#a17635", color: "#000" },
+              }}
+              onClick={isSignUp ? handleSignUp : handleLogin}
+            >
+              {isSignUp ? 'Sign Up' : 'Login'}
+            </Button>
 
             <Text fontSize={'16px'}>
               {isSignUp ? 'Already have an account?' : "Don't have an account?"}
@@ -178,7 +121,6 @@ function Login() {
         </Box>
       </Box>
 
-      {/* Footer fixed at the bottom */}
       <Box mt="auto" width="100%">
         <Footer />
       </Box>

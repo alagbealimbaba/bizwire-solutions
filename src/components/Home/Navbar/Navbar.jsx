@@ -10,40 +10,9 @@ import {
 import { Link } from "react-router-dom";
 import { MobileDrawer } from "./MobileDrawer";
 import DocumentPopover from "./DocumentPopover";
+import { menuLinks } from "../../../constants/navigationMenu";
 
 export const Navbar = () => {
-  const menuLinks = {
-    Home: { link: "/home", items: [] },
-    Company: { link: "/about" },
-    "Tech Services": { link: "/information-services" },
-    Consulting: { link: "/services" },
-    Portfolio: {
-      link: "/pagenotavailable",
-      items: [
-        "Cooperative Management",
-        "Pension & Gratuity Management",
-        "Business Impact Analysis",
-        "Risk Management",
-        "Project Portfolio Management",
-        "Human Resources/Payroll",
-        "Membership Management",
-        "Product Distribution Visibility",
-      ],
-      subLinks: {
-        "Cooperative Management": "/pagenotavailable",
-        "Pension & Gratuity Management": "/pagenotavailable",
-        "Business Impact Analysis": "/pagenotavailable",
-        "Risk Management": "/pagenotavailable",
-        "ProjectPortfolio Management": "/pagenotavailable",
-        "Human Resources/Payroll":"/pagenotavailable",
-        "Membership Management":
-        "/pagenotavailable",
-        "Product Distribution Visibility": "/pagenotavailable",
-      },
-    },
-    Blog: { link: "/blog", items: [] },
-  };
-
   return (
     <Box
       zIndex={"999"}

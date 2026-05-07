@@ -1,23 +1,9 @@
-import { useEffect, useRef } from "react";
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
-import gsap from "gsap";
+import { useFloatingAnimation } from "../../hooks/useFloatingAnimation";
 
 const Business = () => {
-  const imageRef = useRef(null);
+  const imageRef = useFloatingAnimation();
 
-  useEffect(() => {
-    const tl = gsap.timeline();
-
-    tl.to(imageRef.current, {
-      y: 40,
-      duration: 1,
-      opacity: 1,
-      yoyo: true,
-      repeat: -1,
-    });
-
-    tl.play();
-  }, []);
   return (
     <Flex
       flexDirection={{ lg: "row", sm: "column" }}
@@ -53,11 +39,9 @@ const Business = () => {
           <Text
             textAlign={"left"}
             color={"#000"}
-            // textTransform={"capitalize"}
             margin={"0 0 10px"}
             lineHeight={"1.2em"}
             fontSize={"36px"}
-            // fontWeight={"700"}
             width={"100%"}
           >
             Technology is not a barrier

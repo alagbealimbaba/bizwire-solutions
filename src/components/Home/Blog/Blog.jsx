@@ -5,13 +5,15 @@ import { Box, Textarea, Button, Text, Input, Heading, Divider, useToast } from '
 import { Navbar } from '../Navbar/Navbar';
 import Footer from '../Footer';
 import { signOut } from 'firebase/auth';
+import { createToastHelpers } from '../../../utils/toastUtils';
 
 function Blog() {
   const [posts, setPosts] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [commenter, setCommenter] = useState('');
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
   const toast = useToast();
+  const { success, error, warning } = createToastHelpers(toast);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -19,33 +21,23 @@ function Blog() {
         const querySnapshot = await getDocs(collection(db, "posts"));
         const fetchedPosts = [];
         querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          console.log("Post data:", data);  // Log each post data
-          fetchedPosts.push({ id: doc.id, ...data });
+          fetchedPosts.push({ id: doc.id, ...doc.data() });
         });
         setPosts(fetchedPosts);
         setLoading(false);
-      } catch (error) {
-        console.error('Error fetching posts:', error);
+      } catch (err) {
+        console.error('Error fetching posts:', err);
         setLoading(false);
       }
     };
     fetchPosts();
   }, []);
-  
 
   const addComment = async (postId) => {
     const user = auth.currentUser;
 
     if (!user) {
-      toast({
-        title: "Authentication required",
-        description: "You need to be logged in to add a comment!",
-        status: "warning",
-        position: "top",
-        duration: 5000,
-        isClosable: true,
-      });
+      warning("Authentication required", "You need to be logged in to add a comment!", { position: "top" });
       return;
     }
 
@@ -58,57 +50,22 @@ function Blog() {
         });
         setNewComment('');
         setCommenter('');
-        toast({
-          title: "Comment added",
-          description: "Your comment has been added successfully.",
-          status: "success",
-          position: "top",
-          duration: 5000,
-          isClosable: true,
-        });
-      } catch (error) {
-        console.error('Error adding comment:', error);
-        toast({
-          title: "Error",
-          description: "There was an error adding your comment. Please try again.",
-          status: "error",
-          position: "top",
-          duration: 5000,
-          isClosable: true,
-        });
+        success("Comment added", "Your comment has been added successfully.", { position: "top" });
+      } catch (err) {
+        console.error('Error adding comment:', err);
+        error("Error", "There was an error adding your comment. Please try again.", { position: "top" });
       }
     } else {
-      toast({
-        title: "Missing information",
-        description: "Please enter your name and comment!",
-        status: "warning",
-        position: "top",
-        duration: 5000,
-        isClosable: true,
-      });
+      warning("Missing information", "Please enter your name and comment!", { position: "top" });
     }
   };
 
   const handleSignOut = async () => {
     try {
       await signOut(auth);
-      toast({
-        title: "Logged out",
-        description: "You have been logged out successfully.",
-        status: "success",
-        position: "top",
-        duration: 5000,
-        isClosable: true,
-      });
-    } catch (error) {
-      toast({
-        title: "Sign out failed",
-        description: error.message,
-        status: "error",
-        position: "top",
-        duration: 5000,
-        isClosable: true,
-      });
+      success("Logged out", "You have been logged out successfully.", { position: "top" });
+    } catch (err) {
+      error("Sign out failed", err.message, { position: "top" });
     }
   };
 
@@ -127,10 +84,7 @@ function Blog() {
             sx={{
               background: "#000",
               color: "#a17635",
-              _hover: {
-                background: "#a17635",
-                color: "#000",
-              },
+              _hover: { background: "#a17635", color: "#000" },
             }}
             onClick={handleSignOut}
           >
@@ -138,9 +92,9 @@ function Blog() {
           </Button>
         )}
 
-        {loading ? ( // Show loading state while fetching posts
+        {loading ? (
           <Text>Loading posts...</Text>
-        ) : posts.length === 0 ? ( // Handle no posts case
+        ) : posts.length === 0 ? (
           <Text>No posts available.</Text>
         ) : (
           posts.map((post) => (
