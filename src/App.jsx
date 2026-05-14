@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@chakra-ui/react";
 import { Route, Routes } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
 import Loading from "./components/loading";
 import Homepage from "./components/Home/Home";
 import AboutUs from "./components/About Us/AboutUs";
 import InformationServices from "./components/Home/Grid/InformationServices";
 import Services from "./components/Home/Grid/Services";
 import PageNotAvailable from "./components/portfolio/PageNotAvailable";
-import AllBlogs from "./components/admin/AllBlogs/AllBlogs";
-import BlogInfo from "./components/admin/BlogInfo/BlogInfo";
+import Blog from "./components/Home/Blog/Blog";
+import BlogPost from "./components/Home/Blog/BlogPost";
 import AdminLogin from "./components/admin/AdminLogin/AdminLogin";
 import Dashboard from "./components/admin/Dashboard/Dashboard";
-import Login from "./components/Login";
-import BlogNotAvailable from "./components/portfolio/BlogNotAvailable";
+import CreateBlog from "./components/admin/CreateBlog/CreateBlog";
+import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 
 const App = () => {
   const [showLoading, setShowLoading] = useState(true);
@@ -22,71 +23,48 @@ const App = () => {
     return () => clearTimeout(delay);
   }, []);
 
+  const withSuspense = (Component) => (
+    <React.Suspense fallback={showLoading ? <Loading /> : null}>
+      <Component />
+    </React.Suspense>
+  );
+
   return (
     <Box fontSize="xl" margin="auto" textAlign={"center"}>
+      <AuthProvider>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        {/* Public routes */}
+        <Route path="/" element={withSuspense(Homepage)} />
+        <Route path="/home" element={withSuspense(Homepage)} />
+        <Route path="/about" element={withSuspense(AboutUs)} />
+        <Route path="/information-services" element={withSuspense(InformationServices)} />
+        <Route path="/services" element={withSuspense(Services)} />
+        <Route path="/pagenotavailable" element={withSuspense(PageNotAvailable)} />
+
+        {/* Blog routes */}
+        <Route path="/blog" element={withSuspense(Blog)} />
+        <Route path="/blog/:id" element={withSuspense(BlogPost)} />
+
+        {/* Admin routes */}
+        <Route path="/admin" element={<AdminLogin />} />
         <Route
-          path="/blog"
+          path="/dashboard"
           element={
-            <React.Suspense fallback={showLoading ? <Loading /> : null}>
-              <BlogNotAvailable />
-            </React.Suspense>
-          }
-        />
-        <Route path="/allblogs" element={<AllBlogs />} />
-        <Route path="/bloginfo/:id" element={<BlogInfo />} />
-        <Route path="/adminlogin" element={<AdminLogin />} />
-        <Route path="/dasboard" element={<Dashboard />} />
-        <Route
-          path="/"
-          element={
-            <React.Suspense fallback={showLoading ? <Loading /> : null}>
-              <Homepage />
-            </React.Suspense>
-          }
-        />
-        <Route
-          path="/home"
-          element={
-            <React.Suspense fallback={showLoading ? <Loading /> : null}>
-              <Homepage />
-            </React.Suspense>
+            <ProtectedAdminRoute>
+              <Dashboard />
+            </ProtectedAdminRoute>
           }
         />
         <Route
-          path="/about"
+          path="/create-post"
           element={
-            <React.Suspense fallback={showLoading ? <Loading /> : null}>
-              <AboutUs />
-            </React.Suspense>
-          }
-        />
-        <Route
-          path="/information-services"
-          element={
-            <React.Suspense fallback={showLoading ? <Loading /> : null}>
-              <InformationServices />
-            </React.Suspense>
-          }
-        />
-        <Route
-          path="/services"
-          element={
-            <React.Suspense fallback={showLoading ? <Loading /> : null}>
-              <Services />
-            </React.Suspense>
-          }
-        />
-        <Route
-          path="/pagenotavailable"
-          element={
-            <React.Suspense fallback={showLoading ? <Loading /> : null}>
-              <PageNotAvailable />
-            </React.Suspense>
+            <ProtectedAdminRoute>
+              <CreateBlog />
+            </ProtectedAdminRoute>
           }
         />
       </Routes>
+      </AuthProvider>
     </Box>
   );
 };
