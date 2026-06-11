@@ -52,7 +52,7 @@ const BlogPost = () => {
   const toast = useToast();
   const { success, error, warning } = createToastHelpers(toast);
   const { isOpen: isAuthOpen, onOpen: openAuth, onClose: closeAuth } = useDisclosure();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
 
   const [post, setPost] = useState(null);
   const [postLoading, setPostLoading] = useState(true);
@@ -407,7 +407,7 @@ const BlogPost = () => {
           </Flex>
 
           {/* Auth status bar */}
-          {user ? (
+          {authLoading ? null : user ? (
             <Flex
               alignItems="center"
               justifyContent="space-between"

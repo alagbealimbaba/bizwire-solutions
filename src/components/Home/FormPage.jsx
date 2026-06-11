@@ -1,227 +1,226 @@
-import React from "react";
-import { useForm, ValidationError } from "@formspree/react";
+import React, { useState } from "react";
 import {
   Box,
   Flex,
   Text,
   Button,
-  FormControl,
-  Grid,
-  GridItem,
-  Textarea,
-  Image,
   Input,
+  Textarea,
+  SimpleGrid,
+  useToast,
 } from "@chakra-ui/react";
-import { useToast } from "@chakra-ui/react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import { CONTACT } from "../../constants/contact";
 import { createToastHelpers } from "../../utils/toastUtils";
 
-const inputStyles = {
-  height: "54px",
+const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+const inputBase = {
+  borderRadius: "0",
+  borderColor: "gray.300",
   bg: "white",
-  color: "#000",
-  fontSize: "16px",
-  focusbordercolor: "#6f42c1",
-  focusborderwidth: "2px",
+  h: "52px",
+  fontSize: "15px",
+  _focus: { borderColor: "#a17635", boxShadow: "0 0 0 1px #a17635" },
+  _placeholder: { color: "gray.400" },
 };
 
-const initialFormData = {
-  name: "",
-  email: "",
-  phone: "",
-  subject: "",
-  message: "",
-};
+const initialForm = { name: "", email: "", phone: "", subject: "", message: "" };
 
 const FormPage = () => {
-  const [formData, setFormData] = React.useState(initialFormData);
+  const [form, setForm] = useState(initialForm);
+  const [sending, setSending] = useState(false);
   const toast = useToast();
   const { success, error } = createToastHelpers(toast);
 
-  const [state, handleSubmit] = useForm(CONTACT.formspreeEndpoint);
+  const handleChange = (e) =>
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handlePhoneChange = (value) => {
-    setFormData({ ...formData, phone: value || "" });
-  };
-
-  const isValidEmail = (email) => {
-    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    return emailPattern.test(email);
-  };
-
-  const handleFormSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.email || !formData.message) {
-      error("Error", "Please fill in all required fields.", { position: "bottom-right" });
+    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
+      error("Missing fields", "Please fill in your name, email and message.");
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      error("Invalid email", "Please enter a valid email address.");
+      return;
+    }
+    if (!form.phone) {
+      error("Missing phone", "Please enter your phone number.");
       return;
     }
 
-    if (!isValidEmail(formData.email)) {
-      error("Error", "Please enter a valid email address.");
-      return;
-    }
-
-    if (!formData.phone) {
-      error("Error", "Please enter a valid phone number.");
-      return;
-    }
-
-    await handleSubmit(e);
-
-    if (state.succeeded) {
-      success("Success", "Your message has been sent!");
-      setFormData(initialFormData);
-    } else if (state.errors) {
-      error("Error", "Your message was not sent successfully!");
+    setSending(true);
+    try {
+      const res = await fetch(`${API}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed");
+      success("Message sent!", "We'll get back to you shortly.");
+      setForm(initialForm);
+    } catch (err) {
+      error("Failed to send", err.message || "Please try again.");
+    } finally {
+      setSending(false);
     }
   };
 
   return (
-    <Flex
-      flexDirection={{ base: "column", md: "column", lg: "row" }}
-      alignItems={"center"}
-      justifyContent={"center"}
-      p={{
-        lg: "50px 50px 15px 50px",
-        md: "40px 25px 40px 25px",
-        base: "40px 25px 40px 25px",
-      }}
-      width={"100%"}
-      gap={{ base: 16, md: 16, lg: 2 }}
-      bg={"gray.100"}
-    >
-      <Box width={{ base: "100%", md: "100%", lg: "50%" }}>
-        <Image src="./FormPic.png" alt="Your Image" />
-      </Box>
-      <Flex
-        width={{ base: "100%", md: "100%", lg: "50%" }}
-        alignItems={"flex-start"}
-      >
-        <Box>
-          <Flex
-            direction={"column"}
-            p={2}
-            alignItems={"left"}
-            justifyContent={"center"}
-          >
-            <Text
-              textAlign={"left"}
-              color={"#000"}
-              lineHeight={"1.2em"}
-              mb={"10px"}
-              fontSize={"32px"}
-              fontWeight={"700"}
-            >
-              Get in touch with us{" "}
-            </Text>
-            <Text
-              color={"#6a7c92"}
-              textAlign={"left"}
-              letterSpacing={"-0.2px"}
-              lineHeight={"-1px"}
-            >
-              Your need is our collaboration. How may we help you?
-            </Text>
-          </Flex>
-          <Box width={{ md: "100%", base: "100%" }}>
-            <form method="POST" onSubmit={handleFormSubmit}>
-              <FormControl>
-                <Grid
-                  templateColumns={{ base: "1fr", md: "1fr 1fr", lg: "1fr 2fr" }}
-                  gap={4}
-                  p={2}
-                >
-                  <GridItem>
-                    <Input
-                      {...inputStyles}
-                      name="name"
-                      placeholder="Your Name"
-                      value={formData.name}
-                      onChange={handleChange}
-                    />
-                  </GridItem>
-                  <GridItem>
-                    <Input
-                      {...inputStyles}
-                      name="email"
-                      type="email"
-                      placeholder="Your Email"
-                      value={formData.email}
-                      onChange={handleChange}
-                    />
-                  </GridItem>
-                </Grid>
-                <Grid
-                  templateColumns={{ base: "1fr", md: "1fr 1fr", lg: "1fr 2fr" }}
-                  gap={4}
-                  p={2}
-                >
-                  <GridItem className="phone-input-container">
-                    <PhoneInput
-                      className="custom-phone-input"
-                      name="phone"
-                      placeholder="Your Phone No."
-                      value={formData.phone}
-                      onChange={handlePhoneChange}
-                    />
-                  </GridItem>
-                  <GridItem>
-                    <Input
-                      {...inputStyles}
-                      name="subject"
-                      placeholder="Subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                    />
-                  </GridItem>
-                </Grid>
-              </FormControl>
-
-              <FormControl p={2}>
-                <Textarea
-                  {...inputStyles}
-                  name="message"
-                  placeholder="Your Message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  height={"250px"}
-                />
-              </FormControl>
-              <Flex alignItems={"center"} width={"100%"} p={2}>
-                <Button
-                  type="submit"
-                  w={{ base: "100%" }}
-                  height={"50px"}
-                  marginTop={"5px"}
-                  border={"1px solid #a17635"}
-                  color="#a17635"
-                  borderRadius={"4px"}
-                  textAlign={"center"}
-                  alignSelf={"start"}
-                  padding={"14px 39px"}
-                  bg="#000"
-                  _hover={{
-                    color: "#000",
-                    bg: "gray.400",
-                    borderColor: "#a17635",
-                  }}
-                >
-                  Send Message
-                </Button>
-              </Flex>
-            </form>
-          </Box>
-        </Box>
+    <Box bg="gray.100" py={{ base: 14, lg: 20 }} px={{ base: 6, lg: 16 }}>
+      {/* Header */}
+      <Flex alignItems="center" gap={3} mb={3}>
+        <Box w="40px" h="3px" bg="#a17635" />
+        <Text fontSize="xs" fontWeight="700" color="#a17635" letterSpacing="3px" textTransform="uppercase">
+          Contact Us
+        </Text>
       </Flex>
-    </Flex>
+      <Flex
+        flexDirection={{ base: "column", lg: "row" }}
+        justifyContent="space-between"
+        alignItems={{ lg: "flex-end" }}
+        mb={10}
+        gap={4}
+      >
+        <Text
+          fontSize={{ base: "28px", lg: "40px" }}
+          fontWeight="700"
+          color="#000"
+          fontStyle="italic"
+          lineHeight="1.2"
+        >
+          Get in touch<br />with us.
+        </Text>
+        <Text color="#6a7c92" fontStyle="italic" fontSize="sm" maxW="340px" textAlign={{ base: "left", lg: "right" }}>
+          Your need is our collaboration. How may we help you?
+        </Text>
+      </Flex>
+
+      {/* Form */}
+      <Box bg="white" p={{ base: 6, lg: 10 }} borderTop="4px solid" borderColor="#a17635">
+        <form onSubmit={handleSubmit}>
+          <Flex flexDirection="column" gap={4}>
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+              <Input
+                {...inputBase}
+                name="name"
+                placeholder="Full Name *"
+                value={form.name}
+                onChange={handleChange}
+              />
+              <Input
+                {...inputBase}
+                name="email"
+                type="email"
+                placeholder="Email Address *"
+                value={form.email}
+                onChange={handleChange}
+              />
+            </SimpleGrid>
+
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+              {/* Phone input styled to match */}
+              <Box
+                sx={{
+                  ".PhoneInput": {
+                    display: "flex",
+                    alignItems: "center",
+                    border: "1px solid var(--chakra-colors-gray-300)",
+                    background: "white",
+                    height: "52px",
+                    padding: "0 12px",
+                    gap: "8px",
+                    transition: "border-color 0.2s, box-shadow 0.2s",
+                  },
+                  ".PhoneInput:focus-within": {
+                    borderColor: "#a17635",
+                    boxShadow: "0 0 0 1px #a17635",
+                  },
+                  ".PhoneInputCountry": {
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px",
+                    flexShrink: 0,
+                  },
+                  ".PhoneInputCountrySelect": {
+                    border: "none",
+                    outline: "none",
+                    background: "transparent",
+                    fontSize: "15px",
+                    cursor: "pointer",
+                    color: "#000",
+                  },
+                  ".PhoneInputInput": {
+                    flex: 1,
+                    border: "none",
+                    outline: "none",
+                    fontSize: "15px",
+                    color: "#000",
+                    background: "transparent",
+                    height: "100%",
+                  },
+                  ".PhoneInputInput::placeholder": {
+                    color: "#A0AEC0",
+                  },
+                }}
+              >
+                <PhoneInput
+                  international
+                  defaultCountry="NG"
+                  placeholder="Phone Number *"
+                  value={form.phone}
+                  onChange={(val) => setForm((f) => ({ ...f, phone: val || "" }))}
+                />
+              </Box>
+
+              <Input
+                {...inputBase}
+                name="subject"
+                placeholder="Subject"
+                value={form.subject}
+                onChange={handleChange}
+              />
+            </SimpleGrid>
+
+            <Textarea
+              name="message"
+              placeholder="Your Message *"
+              value={form.message}
+              onChange={handleChange}
+              rows={6}
+              resize="vertical"
+              borderRadius="0"
+              borderColor="gray.300"
+              fontSize="15px"
+              _focus={{ borderColor: "#a17635", boxShadow: "0 0 0 1px #a17635" }}
+              _placeholder={{ color: "gray.400" }}
+            />
+
+            <Button
+              type="submit"
+              bg="#000"
+              color="#a17635"
+              _hover={{ bg: "#a17635", color: "#000" }}
+              borderRadius="0"
+              h="52px"
+              fontWeight="700"
+              fontSize="15px"
+              isLoading={sending}
+              loadingText="Sending..."
+              w={{ base: "100%", md: "auto" }}
+              px={12}
+              alignSelf={{ base: "stretch", md: "flex-start" }}
+            >
+              Send Message
+            </Button>
+          </Flex>
+        </form>
+      </Box>
+    </Box>
   );
 };
 

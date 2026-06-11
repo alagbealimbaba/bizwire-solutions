@@ -52,7 +52,7 @@ export const Navbar = () => {
             >
               <Link to={"/home"}>
                 <Box alignSelf={"flex-start"} left={0}>
-                  <Image src="./logo.png" h={"64px"} w={"128px"} />
+                  <Image src="/logo.png" h={"64px"} w={"128px"} />
                 </Box>
               </Link>
               <MobileDrawer onOpenAuth={onOpen} />

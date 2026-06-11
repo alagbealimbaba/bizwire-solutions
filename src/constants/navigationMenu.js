@@ -18,10 +18,10 @@ export const menuLinks = {
   Company: { link: "/about" },
   "Tech Services": { link: "/information-services" },
   Consulting: { link: "/services" },
-  Portfolio: {
-    link: "/pagenotavailable",
-    items: PORTFOLIO_ITEMS,
-    subLinks: PORTFOLIO_SUB_LINKS,
-  },
+  // Portfolio: {
+  //   link: "/pagenotavailable",
+  //   items: PORTFOLIO_ITEMS,
+  //   subLinks: PORTFOLIO_SUB_LINKS,
+  // },
   Blog: { link: "/blog" },
 };

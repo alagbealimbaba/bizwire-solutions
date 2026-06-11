@@ -59,7 +59,7 @@ const Footer = () => {
       color="white"
     >
       <Box display={"flex"} alignItems={"center"} justifyContent={"center"}>
-        <Image src="./logo.png" h={"64px"} w={"128px"} />
+        <Image src="/logo.png" h={"64px"} w={"128px"} />
         <Box
           h={"64px"}
           color={"black"}

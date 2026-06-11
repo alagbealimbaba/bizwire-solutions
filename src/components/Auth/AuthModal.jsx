@@ -91,7 +91,7 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
         <Box bg="#000" px={6} py={4}>
           <Flex justifyContent="space-between" alignItems="center">
             <Flex alignItems="center" gap={3}>
-              <Image src="./logo.png" h="36px" w="72px" />
+              <Image src="/logo.png" h="36px" w="72px" />
               <Text color="#a17635" fontSize="sm" fontStyle="italic">
                 {mode === "login" ? "Sign In" : "Create Account"}
               </Text>

@@ -4,6 +4,7 @@ const cors = require("cors");
 const admin = require("firebase-admin");
 const connectDB = require("./db");
 const postsRouter = require("./routes/posts");
+const contactRouter = require("./routes/contact");
 
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
@@ -31,6 +32,7 @@ app.use(cors({
 app.use(express.json());
 
 app.use("/api/posts", postsRouter);
+app.use("/api/contact", contactRouter);
 app.get("/health", (_, res) => res.json({ status: "ok" }));
 
 const PORT = process.env.PORT || 5000;

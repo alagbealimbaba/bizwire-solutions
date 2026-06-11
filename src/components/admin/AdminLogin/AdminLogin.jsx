@@ -72,7 +72,7 @@ function AdminLogin() {
             textAlign="center"
           >
             <Flex justifyContent="center" mb={3}>
-              <Image src="./logo.png" h="56px" w="112px" />
+              <Image src="/logo.png" h="56px" w="112px" />
             </Flex>
             <Text color="gray.400" fontSize="sm">
               Admin Portal
