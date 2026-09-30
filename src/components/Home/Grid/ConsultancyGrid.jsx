@@ -60,7 +60,6 @@ const ConsultancyCard = ({ item, index }) => {
       position="relative"
       role="group"
       _hover={{ boxShadow: "0 8px 32px rgba(0,0,0,0.10)" }}
-      transition="box-shadow 0.3s ease"
     >
       <Text
         fontSize="52px"
