@@ -9,42 +9,36 @@ const MotionBox = motion(Box);
 const items = [
   {
     number: "01",
-    image: "./ADE.jpeg",
     topic: "Application Development & E-Commerce",
     subtopic:
       "We create custom solutions across a wide spectrum of functions and industries. Web, Mobile and Enterprise Resource Planning systems development, customization and integration aligned with business priorities and objectives.",
   },
   {
     number: "02",
-    image: "./ANI.jpeg",
     topic: "Office Automation & Networking Infrastructure",
     subtopic:
       "Complete office automation and cabling solutions using appropriate technology. Our network services range from OS installation to servers, firewall configurations, routers, switches, Voice Solutions, and VPNs.",
   },
   {
     number: "03",
-    image: "./DMS.jpg",
     topic: "Technical Digital Marketing Services",
     subtopic:
       "Tailored digital marketing solutions that propel your business to new heights. We understand your brand, your goals, and your unique market — committed to driving success day after day.",
   },
   {
     number: "04",
-    image: "./DEA.jpg",
     topic: "Data Engineering & Analytics",
     subtopic:
       "Leveraging leading-edge analytics plus the power of data science to help clients make more intelligent decisions, deliver innovative solutions and improve overall results.",
   },
   {
     number: "05",
-    image: "./WFM.jpg",
     topic: "Workflow Management",
     subtopic:
       "Automating business workflows to optimize people, processes and data for better outcomes. We offer workflow implementation services using the latest AI and ML tools.",
   },
   {
     number: "06",
-    image: "./IOT.jpeg",
     topic: "Internet of Things (IoT)",
     subtopic:
       "Beat your competitors to the number one spot in automation by using IoT apps. We design and deploy smart connected systems tailored to your business needs.",
@@ -68,7 +62,6 @@ const ServiceCard = ({ item, index }) => {
       position="relative"
       role="group"
       _hover={{ boxShadow: "0 8px 32px rgba(0,0,0,0.10)" }}
-      transition="box-shadow 0.3s ease"
     >
       <Text
         fontSize="52px"
@@ -113,7 +106,7 @@ const ServiceCard = ({ item, index }) => {
   );
 };
 
-const Services = () => {
+const InformationServices = () => {
   const heroRef = useRef(null);
   const heroInView = useInView(heroRef, { once: true });
 
@@ -121,7 +114,6 @@ const Services = () => {
     <Box>
       <Navbar />
 
-      {/* Hero */}
       <Box
         position="relative"
         h={{ base: "420px", lg: "580px" }}
@@ -190,7 +182,6 @@ const Services = () => {
         </Flex>
       </Box>
 
-      {/* Services grid */}
       <Box bg="gray.100" py={{ base: 14, lg: 20 }} px={{ base: 6, lg: 16 }}>
         <Flex alignItems="center" gap={3} mb={3}>
           <Box w="40px" h="3px" bg="#a17635" />
@@ -221,4 +212,4 @@ const Services = () => {
   );
 };
 
-export default Services;
+export default InformationServices;
