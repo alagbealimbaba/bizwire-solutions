@@ -1,15 +1,9 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const admin = require("firebase-admin");
 const connectDB = require("./db");
 const postsRouter = require("./routes/posts");
 const contactRouter = require("./routes/contact");
-
-admin.initializeApp({
-  credential: admin.credential.applicationDefault(),
-  projectId: process.env.FIREBASE_PROJECT_ID,
-});
 
 connectDB().catch((err) => {
   console.error("Failed to connect to MongoDB:", err);
@@ -22,10 +16,14 @@ const allowedOrigins = [
   process.env.CLIENT_URL || "http://localhost:5173",
   "http://localhost:5173",
   "http://localhost:5174",
+  "http://127.0.0.1:5173",
+  "http://127.0.0.1:5174",
 ];
 app.use(cors({
   origin: (origin, cb) => {
-    if (!origin || allowedOrigins.includes(origin)) cb(null, true);
+    const isLocalOrigin = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin || "");
+    const isDevelopment = process.env.NODE_ENV !== "production";
+    if (!origin || isDevelopment || isLocalOrigin || allowedOrigins.includes(origin)) cb(null, true);
     else cb(new Error("Not allowed by CORS"));
   },
 }));
